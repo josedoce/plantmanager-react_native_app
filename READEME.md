@@ -15,3 +15,15 @@ https://reactnavigation.org/docs/getting-started
 com o expo é necessario:
 >$ expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view
 >$ yarn add @react-navigation/stack
+
+#### para simulação de servidor
+>yarn add json-server
+
+> $ json-server --host 'ip' --port 'porta'
+
+#### usando svg em projeto react
+> $ expo install react-native-svg
+
+#### usando o lottie para animações de load
+> https://lottiefiles.com/featured
+> expo install lottie-react-native
