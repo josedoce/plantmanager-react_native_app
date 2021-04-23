@@ -9,18 +9,21 @@ import {
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
     Keyboard, //usado para evento de clicar fora de caixa
+    Alert
 } from 'react-native';
 import {Button} from '../components';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Params} from '../libs/navigator';
 
 export function UserIdentification(){
     const [isFocused, setIsFocused] = useState(false);
     const [isFilled, setIsFilled] = useState(false);
     const [name, setName] = useState<string>();
     const navigation = useNavigation();
-
+    
     function handleInputBlur(){
         setIsFocused(false);
         setIsFilled(!!name);
@@ -32,9 +35,29 @@ export function UserIdentification(){
         setIsFilled(!!value);
         setName(value);
     }
-    function handleSubmit(){
-      navigation.navigate('Confirmation');
+    async function handleSubmit(){
+        if(!name){
+            return Alert.alert(`Me diz como chamar você 🙄`);
+        }
+        //chave,valor
+        /*usando o asyncStorage
+        padrão de nomeação
+        @nome_do_app:o_que_estamos_salvando
+        */
+        try{
+            await AsyncStorage.setItem('@plantmanager:user',name);
+            navigation.navigate('Confirmation',{
+                title: 'Protinho',
+                subtitle: 'Agora vamos começar a cuidar das suas plantinhas com muito cuidado',
+                buttonTitle: 'Começar',
+                icon: 'smile',
+                nextScreen: 'PlantSelect'
+            } as Params);
+        }catch(error){
+            Alert.alert(`Não foi possivel salvar o seu nome. 😥`);
+        }
     }
+    
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView 
