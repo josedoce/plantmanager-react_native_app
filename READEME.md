@@ -19,7 +19,7 @@ com o expo é necessario:
 #### para simulação de servidor
 >yarn add json-server
 
-> $ json-server --host 'ip' --port 'porta'
+> $ json-server arquivo.json --host 'ip' --port 'porta'
 
 #### usando svg em projeto react
 > $ expo install react-native-svg
@@ -27,3 +27,42 @@ com o expo é necessario:
 #### usando o lottie para animações de load
 > https://lottiefiles.com/featured
 > expo install lottie-react-native
+
+#### salvando os dados no dispositivo com o AsyncStorage
+
+>https://docs.expo.io/versions/latest/sdk/async-storage/
+>salvando:
+```ts
+//chave,valor
+        /*usando o asyncStorage
+        padrão de nomeação
+        @nome_do_app:o_que_estamos_salvando
+        */
+        await AsyncStorage.setItem('@plantmanager:user',name);
+```
+>pegando:
+```ts
+const [userName, setUserName] = useState<string>();
+
+    useEffect(()=>{
+        async function loadStorageUserName(){
+            const user = await AsyncStorage.getItem('@plantmanager:user');
+            setUserName(user?user:'');
+        }
+        loadStorageUserName();
+    }, []);
+```
+
+#### seleção de datas DateTimePicker:
+
+>https://docs.expo.io/versions/latest/sdk/date-time-picker/
+> $ expo install @react-native-community/datetimepicker
+
+#### manipulaçao de data e horas com a lib date-fns:
+>https://date-fns.org/docs/Getting-Started
+>$ yarn add date-fns
+
+#### usando tab navigation(menu inferior):
+
+>https://reactnavigation.org/docs/tab-based-navigation
+>$ yarn add @react-navigation/bottom-tabs
