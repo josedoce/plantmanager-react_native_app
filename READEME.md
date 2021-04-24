@@ -66,3 +66,8 @@ const [userName, setUserName] = useState<string>();
 
 >https://reactnavigation.org/docs/tab-based-navigation
 >$ yarn add @react-navigation/bottom-tabs
+
+
+#### usando api de notificações do expo: 
+>https://docs.expo.io/versions/latest/sdk/notifications/
+>expo install expo-notifications
