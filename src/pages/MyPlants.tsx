@@ -3,23 +3,46 @@ import {
     StyleSheet,
     View,
     Text,
-    Image
+    Image,
+    Alert
 } from 'react-native';
 import colors from '../../styles/colors';
 import { Header } from '../components';
 import watedrop from '../assets/waterdrop.png';
 import { FlatList } from 'react-native-gesture-handler';
-import { loadPlant, PlantProps } from '../libs/storage';
+import { loadPlant, PlantProps, removePlant } from '../libs/storage';
 import { formatDistance } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import fonts from '../../styles/fonts';
 import { PlantCardSecondary } from '../components/PlantCardSecondary';
+import { Load } from '../components/Load';
 
 export function MyPlants(){
     const [myPlants, setMyPlants] = useState<PlantProps[]>([]);
     const [loading, setLoading] = useState(true);
     const [nextWaterd, setNextWatered] = useState<string>();
-    
+    function handleRemove(plant: PlantProps){
+        Alert.alert('Remover',`Deseja remove a ${plant.name}?`,[
+            {
+                text: 'Não 🙏',
+                style: 'cancel'
+            },
+            {
+                text: 'Sim 🤨',
+                onPress: async()=>{
+                    try {
+                        await removePlant(plant.id);
+                        //filtre o que já tem retirando a planta deletada
+                        setMyPlants((oldData)=>
+                            oldData.filter((item)=>item.id!=plant.id)
+                        );
+                    } catch (error) {
+                        Alert.alert('Não foi possível remover! 😁');
+                    }
+                }
+            }
+        ]);
+    }
     useEffect(()=>{
         async function loadStoragedData(){
             const plantsStoraged = await loadPlant();
@@ -35,7 +58,10 @@ export function MyPlants(){
             setLoading(false);
         }
         loadStoragedData();
-    },[])
+    },[]);
+    if(loading){
+        return <Load/>
+    }
     return (
         <View style={styles.container}>
             <Header/>
@@ -56,7 +82,10 @@ export function MyPlants(){
                     data={myPlants}
                     keyExtractor={(item)=>String(item.id)}
                     renderItem={({item})=>(
-                        <PlantCardSecondary data={item}/>
+                        <PlantCardSecondary
+                            data={item}
+                            handleRemove={()=>handleRemove(item)}
+                        />
                     )}
                     showsVerticalScrollIndicator={false}
                 />
